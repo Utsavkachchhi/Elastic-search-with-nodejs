@@ -50,4 +50,15 @@ const deleteProduct = async(req,res) => {
 
 }
 
-  module.exports = { AddProduct, UpdateProduct,deleteProduct};
+const BulkAddProduct = async(req,res) => {
+  try{
+
+    const bulk_add_product = await Product.insertMany(req.body);
+    res.send({status:200,success:true,message:'book update successfully',data:bulk_add_product})
+  }
+  catch(err){
+    console.log('err',err);
+  }
+}  
+
+  module.exports = { AddProduct, UpdateProduct,deleteProduct,BulkAddProduct};

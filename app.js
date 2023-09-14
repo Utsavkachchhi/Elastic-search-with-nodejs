@@ -8,6 +8,7 @@ const User = require("./model/User")
 const router = require('./routers/user')
 const book = require('./routers/book')
 const product = require('./routers/product')
+const stock = require('./routers/stock')
 const app = express();
 
 
@@ -33,6 +34,6 @@ app.use(express.urlencoded({ extended : false}))
 app.use('/api/user',router)
 app.use('/api/product',product);
 app.use('/api/book',book)
-
+app.use('/api/stock',stock)
 
 app.listen(8080)
