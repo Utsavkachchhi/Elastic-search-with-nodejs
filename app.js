@@ -9,6 +9,7 @@ const router = require('./routers/user')
 const book = require('./routers/book')
 const product = require('./routers/product')
 const stock = require('./routers/stock')
+const category = require('./routers/category')
 const app = express();
 
 
@@ -35,5 +36,6 @@ app.use('/api/user',router)
 app.use('/api/product',product);
 app.use('/api/book',book)
 app.use('/api/stock',stock)
+app.use('/api/category',category)
 
 app.listen(8080)
