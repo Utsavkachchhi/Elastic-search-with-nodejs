@@ -59,6 +59,38 @@ const BulkAddProduct = async(req,res) => {
   catch(err){
     console.log('err',err);
   }
-}  
+} 
 
-  module.exports = { AddProduct, UpdateProduct,deleteProduct,BulkAddProduct};
+const GetProduct = async(req,res) => {
+  try{
+    const page = req.query.page || 1; // Get the requested page number from the query parameters
+    const perPage = req.query.recordsPerPage || 3; 
+
+    const product_data = await elasticsearchClient.search({
+      index: 'products', // Replace with your Elasticsearch index name
+      body : {
+      query: {
+        match_all: {}
+      },
+      from: (page - 1) * perPage,
+      size: perPage 
+      // profile: true
+    },
+    });
+    
+    // Query data from Elasticsearch
+    if (product_data.hits && product_data.hits.hits) {
+      const elasticsearchResults = product_data.hits.hits.map((hit) => hit._source);
+      res.send({Product:elasticsearchResults});
+
+    }
+    else{
+      res.send({message:'no products found!'});
+    }
+  }
+  catch(err){
+    console.log('err',err);
+  }
+}
+
+  module.exports = { AddProduct, UpdateProduct,deleteProduct,BulkAddProduct,GetProduct};

@@ -11,5 +11,15 @@ const AddCategory = async (req, res) => {
     }
   };
 
+  const BulkAddCategory = async(req,res) => {
+    try{
+  
+      const bulk_add_category = await Category.insertMany(req.body);
+      res.send({status:200,success:true,message:'book update successfully',data:bulk_add_category})
+    }
+    catch(err){
+      console.log('err',err);
+    }
+  }  
  
-  module.exports = {AddCategory};
+  module.exports = {AddCategory,BulkAddCategory};
