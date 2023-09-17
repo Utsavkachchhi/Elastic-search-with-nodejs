@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
     image: {type : String,es_indexed:true},
 
 });   
+productSchema.index({category: 1});
 
 productSchema.plugin(mongoosastic,{esClient:elasticsearchClient})
 

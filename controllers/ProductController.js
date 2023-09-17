@@ -93,4 +93,79 @@ const GetProduct = async(req,res) => {
   }
 }
 
-  module.exports = { AddProduct, UpdateProduct,deleteProduct,BulkAddProduct,GetProduct};
+const GetProductSuggestion = async(req,res) => {
+  try{
+    const product_data = await elasticsearchClient.search({
+      index: ['products','categories','stocks'], // Replace with your Elasticsearch index name
+      body : {
+        query: {
+          bool: {
+            should: [
+              {
+                wildcard: {
+                  "name": `*${req.query.search}*`
+                }
+              }
+            ]
+          }
+      }
+    },
+    });
+   
+    // console.log('res',product_data);
+    if (product_data.hits && product_data.hits.hits) {
+      const elasticsearchResults = product_data.hits.hits.map((result) =>{ return {_id: result._id,name:result._source.name} });
+      res.send({status:200,success:true,search_result:elasticsearchResults});
+
+    }
+    else{
+      res.send({message:'no results found!'});
+    }
+    
+  }
+  catch(err){
+    console.log('err',err);
+  }
+}
+
+const GetProductSuggestionResult = async(req,res) => {
+  try{
+    const product_data = await elasticsearchClient.search({
+      index: ['products','stocks'], // Replace with your Elasticsearch index name
+      body : {
+        query: {
+          bool: {
+            should: [
+              {
+                term: {
+                  "_id": `${req.params.id}`
+                }
+              },
+              {
+                match_phrase_prefix: {
+                  "category": `${req.params.id}`
+                }
+              }
+            ]
+          }
+        }
+    },
+    });
+   
+    // console.log('res',product_data);
+    if (product_data.hits && product_data.hits.hits) {
+      const elasticsearchResults = product_data.hits.hits.map((result) =>{ return {_id: result._id,name:result._source.name,price:result._source.price} });
+      res.send({status:200,success:true,search_result:elasticsearchResults});
+
+    }
+    else{
+      res.send({message:'no results found!'});
+    }
+    
+  }
+  catch(err){
+    console.log('err',err);
+  }
+}
+
+  module.exports = { AddProduct, UpdateProduct,deleteProduct,BulkAddProduct,GetProduct,GetProductSuggestion,GetProductSuggestionResult};
