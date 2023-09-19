@@ -10,6 +10,8 @@ const book = require('./routers/book')
 const product = require('./routers/product')
 const stock = require('./routers/stock')
 const category = require('./routers/category')
+const review = require('./routers/review')
+
 const app = express();
 
 
@@ -37,5 +39,6 @@ app.use('/api/product',product);
 app.use('/api/book',book)
 app.use('/api/stock',stock)
 app.use('/api/category',category)
+app.use('/api/review',review)
 
 app.listen(8080)
